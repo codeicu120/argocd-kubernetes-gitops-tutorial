@@ -1,0 +1,7 @@
+# overlays/prod/service-type-patch.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: grade-submission-api   # 注意这里用的是 base 里的原始名字
+spec:
+  type: ClusterIP              # 覆盖成 ClusterIP
