@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grade-submission-api-ing
+  namespace: grade-demo
+spec:
+  ingressClassName: nginx   # 使用 ingress-nginx 控制器
+  rules:
+    - host: dev.grade.local   # 自己起一个域名，方便记
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: grade-submission-api
+                port:
+                  number: 3000
