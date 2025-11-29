@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - redis-configmap.yaml
+  - redis-master-statefulset.yaml
+  - redis-replica-statefulset.yaml
+  - redis-sentinel-statefulset.yaml
+  - redis-services.yaml
