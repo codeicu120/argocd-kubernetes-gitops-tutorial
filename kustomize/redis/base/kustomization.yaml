@@ -5,5 +5,4 @@ resources:
   - redis-configmap.yaml
   - redis-master-statefulset.yaml
   - redis-replica-statefulset.yaml
-  - redis-sentinel-statefulset.yaml
   - redis-services.yaml
