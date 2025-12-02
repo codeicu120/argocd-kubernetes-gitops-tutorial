@@ -25,7 +25,7 @@ spec:
               accessModes: ["ReadWriteOnce"]
               resources:
                 requests:
-                  storage: 20Gi
+                  storage: 10Gi
               storageClassName: local-path   # <<<<<<<< ★★ 关键
               # 如果你有自己的 StorageClass 可以写这里
               # storageClassName: gp3
