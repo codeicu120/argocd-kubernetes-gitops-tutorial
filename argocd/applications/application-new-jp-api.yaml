@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: new-jp-api         # ArgoCD 里这个 app 的名字
+  namespace: argocd        # ArgoCD 自己的 namespace（你之前就是这个）
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/codeicu120/grade-api-gitops.git
+    targetRevision: main          # 分支
+    path: .                       # manifest 所在路径（在仓库根目录就写 "."）
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: jpapi              # 要部署到的 k8s namespace
+
+  syncPolicy:
+    automated:
+      prune: true                 # 删除 Git 里已经移除的资源
+      selfHeal: true              # 手动改了集群，自动纠回去
+    syncOptions:
+      - CreateNamespace=true      # 没有 jpapi ns 就自动创建

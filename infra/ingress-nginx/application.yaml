@@ -17,6 +17,8 @@ spec:
           value: "30081"
         - name: controller.service.nodePorts.https
           value: "30082"
+        - name: controller.admissionWebhooks.failurePolicy
+          value: "Ignore"
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress-nginx
