@@ -8,27 +8,28 @@ spec:
   source:
     repoURL: https://helm.elastic.co
     chart: elasticsearch
-    # 建议固定一个版本号，比如 8.5.1、8.12.x 等，你可以自己改：
     targetRevision: 8.5.1
     helm:
       values: |
         clusterName: es-cluster
+        nodeGroup: "master"
 
-        # 单 nodeSet，3 副本，全是 data+master（小集群够用）
-        nodeSets:
-          - name: default
-            count: 3
-            config:
-              node.roles: ["master", "data", "ingest"]
-              node.store.allow_mmap: false
-            volumeClaimTemplate:
-              accessModes: ["ReadWriteOnce"]
-              resources:
-                requests:
-                  storage: 10Gi
-              storageClassName: local-path   # <<<<<<<< ★★ 关键
-              # 如果你有自己的 StorageClass 可以写这里
-              # storageClassName: gp3
+        # 3 副本
+        replicas: 3
+
+        # 角色：master+data+ingest（小集群够用）
+        roles:
+          - master
+          - data
+          - ingest
+
+        # 关键：PVC 模板 + storageClassName
+        volumeClaimTemplate:
+          storageClassName: local-path
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 10Gi
 
         esJavaOpts: "-Xms1g -Xmx1g"
 
@@ -40,7 +41,6 @@ spec:
             cpu: "2"
             memory: "2Gi"
 
-        # 对内访问方式：ClusterIP
         service:
           type: ClusterIP
           port: 9200
