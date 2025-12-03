@@ -1,10 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: redis-sentinel
   namespace: redis
 spec:
-  replicas: 2
+  serviceName: redis-sentinel          # 要和上面的 Service 名一致
+  replicas: 3
   selector:
     matchLabels:
       app: redis
@@ -23,8 +24,10 @@ spec:
           ports:
             - containerPort: 26379
           volumeMounts:
-            - name: redis-conf
+            - name: redis-conf       # 配置文件（来自 ConfigMap）
               mountPath: /config
+            - name: data             # 小磁盘
+              mountPath: /data
       volumes:
         - name: redis-conf
           configMap:
@@ -32,3 +35,12 @@ spec:
             items:
               - key: sentinel.conf
                 path: sentinel.conf
+  volumeClaimTemplates:
+    - metadata:
+        name: data                   # 要和上面的 volumeMounts.name 对应
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path # 你集群里的 local-path StorageClass
+        resources:
+          requests:
+            storage: 1Gi
