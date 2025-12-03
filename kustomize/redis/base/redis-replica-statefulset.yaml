@@ -37,6 +37,8 @@ spec:
             items:
               - key: redis.conf
                 path: redis.conf
+              - key: sentinel.conf
+                path: sentinel.conf
   volumeClaimTemplates:
     - metadata:
         name: data
