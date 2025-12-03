@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: redis-sentinel
-  namespace: redis            # ✅ 确保跟 redis-master 在同一个 namespace
 spec:
   serviceName: redis-sentinel
   replicas: 2
@@ -16,7 +15,6 @@ spec:
         app: redis
         role: sentinel
     spec:
-      dnsPolicy: ClusterFirst  # ✅ 使用 K8s 的 DNS
       containers:
         - name: sentinel
           image: redis:7
