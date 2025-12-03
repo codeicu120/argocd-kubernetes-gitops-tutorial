@@ -1,10 +1,10 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: redis-sentinel
+  namespace: redis
 spec:
-  serviceName: redis-sentinel
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: redis
@@ -15,6 +15,7 @@ spec:
         app: redis
         role: sentinel
     spec:
+      dnsPolicy: ClusterFirst
       containers:
         - name: sentinel
           image: redis:7
