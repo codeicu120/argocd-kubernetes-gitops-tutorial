@@ -20,7 +20,11 @@ spec:
       containers:
         - name: sentinel
           image: redis:7
-          command: ["redis-server", "/config/sentinel.conf", "--sentinel"]
+          command:
+            - sh
+            - -c
+            - |
+              redis-server /config/redis.conf --replicaof redis-master 6379
           ports:
             - containerPort: 26379
           volumeMounts:
@@ -35,6 +39,8 @@ spec:
             items:
               - key: sentinel.conf
                 path: sentinel.conf
+              - key: redis.conf
+                path: redis.conf
   volumeClaimTemplates:
     - metadata:
         name: data                   # 要和上面的 volumeMounts.name 对应
