@@ -9,7 +9,7 @@ metadata:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
-    - host: argocd.pixiv.com
+    - host: argocd.ipixiv.com
       http:
         paths:
           - path: /
