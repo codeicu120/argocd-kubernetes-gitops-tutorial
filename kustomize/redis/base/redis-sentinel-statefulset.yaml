@@ -37,12 +37,3 @@ spec:
             items:
               - key: sentinel.conf
                 path: sentinel.conf
-  volumeClaimTemplates:
-    - metadata:
-        name: data                   # 要和上面的 volumeMounts.name 对应
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        storageClassName: local-path # 你集群里的 local-path StorageClass
-        resources:
-          requests:
-            storage: 1Gi
