@@ -6,4 +6,3 @@ resources:
   - redis-master-statefulset.yaml
   - redis-replica-statefulset.yaml
   - redis-services.yaml
-  - redis-sentinel-statefulset.yaml
