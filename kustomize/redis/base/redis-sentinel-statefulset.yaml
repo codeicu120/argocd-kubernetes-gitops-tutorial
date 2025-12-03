@@ -4,7 +4,7 @@ metadata:
   name: redis-sentinel
 spec:
   serviceName: redis-sentinel
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: redis
