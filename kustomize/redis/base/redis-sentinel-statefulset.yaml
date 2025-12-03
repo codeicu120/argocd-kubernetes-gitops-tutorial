@@ -20,12 +20,9 @@ spec:
       containers:
         - name: sentinel
           image: redis:7
-          #command: ["redis-server", "/config/sentinel.conf"]
           command:
-            - sh
-            - -c
-            - |
-              redis-server /config/sentinel.conf --sentinel
+            - "redis-sentinel"
+            - "/config/sentinel.conf"
           ports:
             - containerPort: 26379
           volumeMounts:
