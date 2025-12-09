@@ -18,13 +18,13 @@ spec:
             - -c
             - |
               echo "Waiting mongo-rs-0 ready..."
-              until mongo --host mongo-rs-0.mongo.mongo.svc.cluster.local:27017 --eval "db.adminCommand('ping')" >/dev/null 2>&1; do
+              until mongosh --host mongo-rs-0.mongo.mongo.svc.cluster.local:27017 --eval "db.adminCommand({ ping: 1 })" >/dev/null 2>&1; do
                 echo "Mongo not ready, sleep 5s..."
                 sleep 5
               done
 
               echo "Init replica set..."
-              mongo --host mongo-rs-0.mongo.mongo.svc.cluster.local:27017 <<EOF
+              mongosh --host mongo-rs-0.mongo.mongo.svc.cluster.local:27017 << 'EOF'
               rs.initiate({
                 _id: "rs0",
                 members: [

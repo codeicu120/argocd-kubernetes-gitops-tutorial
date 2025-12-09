@@ -4,7 +4,7 @@ metadata:
   name: mongo-rs
   namespace: mongo
 spec:
-  serviceName: mongo
+  serviceName: mongo-rs
   replicas: 3
   selector:
     matchLabels:
@@ -15,33 +15,34 @@ spec:
         app: mongo
     spec:
       containers:
-        - name: mongo
-          image: mongo:6.0
-          imagePullPolicy: IfNotPresent
+        - name: mongod
+          image: mongo:8.0
+          command: ["mongod", "--config", "/etc/mongod.conf"]
           ports:
             - containerPort: 27017
-          command:
-            - mongod
-            - "--replSet"
-            - "rs0"              # 副本集名称
-            - "--bind_ip_all"
-            - "--auth"
-            - "--dbpath"
-            - "/data/db"
-          env:
-            - name: MONGO_INITDB_ROOT_USERNAME
-              value: root
-            - name: MONGO_INITDB_ROOT_PASSWORD
-              value: "YourStrongPassword"   # 👈 自己改
+              name: mongo
           volumeMounts:
             - name: data
               mountPath: /data/db
+            - name: config
+              mountPath: /etc/mongod.conf
+              subPath: mongod.conf
+            - name: keyfile
+              mountPath: /data/keyfile
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: mongo-config
+        - name: keyfile
+          secret:
+            secretName: mongo-keyfile
   volumeClaimTemplates:
     - metadata:
         name: data
       spec:
         accessModes: ["ReadWriteOnce"]
-        # storageClassName 在 overlay 里 patch
+        storageClassName: local-path       # 你之前已经有 local-path，就用它
         resources:
           requests:
-            storage: 20Gi
+            storage: 10Gi
