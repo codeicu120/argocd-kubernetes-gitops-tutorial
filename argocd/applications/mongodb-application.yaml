@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/codeicu120/argocd-kubernetes-gitops-tutorial.git   # 👈 改成你的
     targetRevision: main                                        # 或其他分支
-    path: mongodb/overlays/dev
+    path: infra/mongodb/overlays/dev
   destination:
     server: https://kubernetes.default.svc
     namespace: mongo
