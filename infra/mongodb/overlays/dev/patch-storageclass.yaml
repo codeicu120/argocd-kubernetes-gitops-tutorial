@@ -8,4 +8,9 @@ spec:
     - metadata:
         name: data
       spec:
-        storageClassName: local-path   # 👈 改成你集群里的
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: local-path     # 或者你的 ebs-gp3 / 其他 SC 名称
+        resources:
+          requests:
+            storage: 20Gi                # 必须要有这个
