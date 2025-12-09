@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongo-rs-init
+  namespace: mongo
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: init-rs
+          image: mongo:8.0
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting mongo-rs-0 ready..."
+              until mongo --host mongo-rs-0.mongo.mongo.svc.cluster.local:27017 --eval "db.adminCommand('ping')" >/dev/null 2>&1; do
+                echo "Mongo not ready, sleep 5s..."
+                sleep 5
+              done
+
+              echo "Init replica set..."
+              mongo --host mongo-rs-0.mongo.mongo.svc.cluster.local:27017 <<EOF
+              rs.initiate({
+                _id: "rs0",
+                members: [
+                  { _id: 0, host: "mongo-rs-0.mongo.mongo.svc.cluster.local:27017" },
+                  { _id: 1, host: "mongo-rs-1.mongo.mongo.svc.cluster.local:27017" },
+                  { _id: 2, host: "mongo-rs-2.mongo.mongo.svc.cluster.local:27017" }
+                ]
+              })
+              EOF
+
+              echo "Replica set initiated."
